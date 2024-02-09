@@ -1,0 +1,79 @@
+{
+  "name": "@apillon/ipfs-kubo-rpc-http-client",
+  "description": "▶◀ Apillon library for IPFS Kubo RPC API v0  ▶◀",
+  "version": "0.0.1",
+  "author": "Apillon",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/Apillon/ipfs-kubo-rpc-http-client/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Apillon/ipfs-kubo-rpc-http-client"
+  },
+  "declaration": true,
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "prebuild": "rimraf dist",
+    "build": "tsc --declarationMap",
+    "dev": "tsc --declarationMap --watch",
+    "lint": "tsc --declarationMap && eslint \"{src,test}/**/*.ts\" --fix",
+    "publish-package": "npm publish",
+    "publish-beta": "npm publish --tag beta",
+    "test": "npx jest"
+  },
+  "keywords": [
+    "Apillon",
+    "web3",
+    "development",
+    "blockchain",
+    "ipfs",
+    "kubo",
+    "RPC API"
+  ],
+  "dependencies": {
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "eslint-config-common": "*",
+    "nodemon": "^3.0.2",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "tsconfig": "*",
+    "jest": "29.7.0",
+    "ts-jest": "29.1.1",
+    "@types/jest": "^29.5.11"
+  },
+  "jest": {
+    "testTimeout": 1800000,
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "rootDir": "src",
+    "testPathIgnorePatterns": [
+      "dist/*"
+    ],
+    "testRegex": ".*\\.test\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "preset": "ts-jest",
+    "verbose": true
+  }
+}
