@@ -1,12 +1,11 @@
 import { IpfsKuboRpcHttpClient } from "../modules/ipfs-http-client";
+import "dotenv/config";
 
 describe("Ipfs http client integration test", () => {
-  const client = new IpfsKuboRpcHttpClient(
-    "http://ipfs-eu1-0.apillon.io:5001/api/v0"
-  );
+  const client = new IpfsKuboRpcHttpClient(process.env.RPC_API_URL);
   test("Test add", async () => {
     const res = await client.add({
-      content: "Some test content",
+      content: "Some test content on IPFS",
     });
     expect(res.Hash).toBeTruthy();
     expect(res.Size).toBeGreaterThan(0);
