@@ -11,10 +11,11 @@ describe("Ipfs http client integration test", () => {
     expect(res.Size).toBeGreaterThan(0);
   });
   describe("Mutable file system tests", () => {
+    const mfsFileName = `My_MFS_test_file_${new Date().toDateString()}.txt`;
     test("Test write MFS file", async () => {
       const res = await client.files.write({
-        content: "This is file in MFS",
-        path: "/ipfs-http-client-tests/My MFS test file.txt",
+        content: "This is file in MFS written on " + new Date().toString(),
+        path: `/ipfs-http-client-tests/${mfsFileName}`,
       });
       expect(res).toBeTruthy();
     });
@@ -23,11 +24,12 @@ describe("Ipfs http client integration test", () => {
       const res = await client.files.ls({ path: "/ipfs-http-client-tests" });
       expect(res).toBeTruthy();
       expect(res.length).toBeGreaterThan(0);
-      const file = res.find((x) => x.Name == "My MFS test file.txt");
+      const file = res.find((x) => x.Name == mfsFileName);
 
       expect(file.Hash).toBeTruthy();
       expect(file.Name).toBeTruthy();
-      expect(file.Size).toBe(0);
+      expect(file.Type).toBe(0);
+      expect(file.Size).toBeGreaterThan(0);
     });
 
     test("Test get stat for path ", async () => {

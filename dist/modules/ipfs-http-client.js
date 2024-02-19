@@ -24,6 +24,7 @@ class IpfsKuboRpcHttpClient {
             const form = new form_data_1.default();
             form.append("file", params.content);
             const res = await axios_1.default.post(`${this.url}/add?cid-version=1`, form);
+            res.data.Size = +res.data.Size;
             return res.data;
         }
         catch (err) {

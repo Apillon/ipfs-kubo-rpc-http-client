@@ -30,6 +30,7 @@ export class IpfsKuboRpcHttpClient {
 
       const res = await axios.post(`${this.url}/add?cid-version=1`, form);
 
+      res.data.Size = +res.data.Size;
       return res.data;
     } catch (err) {
       throw new ClientError(err);
