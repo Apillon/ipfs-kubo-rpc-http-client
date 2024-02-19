@@ -1,7 +1,7 @@
 {
   "name": "@apillon/ipfs-kubo-rpc-http-client",
-  "description": "▶◀ Apillon library for IPFS Kubo RPC API v0  ▶◀",
-  "version": "0.0.1",
+  "description": "▶◀ Apillon node.js library for IPFS Kubo RPC API v0  ▶◀",
+  "version": "0.0.2",
   "author": "Apillon",
   "license": "MIT",
   "main": "./dist/index.js",

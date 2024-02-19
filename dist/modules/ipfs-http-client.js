@@ -3,17 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Pin = exports.Name = exports.Key = exports.Files = exports.IpfsKuboRpcHttpClient = void 0;
+exports.IpfsKuboRpcHttpClient = void 0;
 const axios_1 = __importDefault(require("axios"));
 const form_data_1 = __importDefault(require("form-data"));
 const client_error_1 = require("../types/client-error");
+const files_1 = require("./files");
+const key_1 = require("./key");
+const name_1 = require("./name");
+const pin_1 = require("./pin");
 class IpfsKuboRpcHttpClient {
     constructor(url) {
         this.url = url;
-        this.files = new Files(url);
-        this.key = new Key(url);
-        this.name = new Name(url);
-        this.pin = new Pin(url);
+        this.files = new files_1.Files(url);
+        this.key = new key_1.Key(url);
+        this.name = new name_1.Name(url);
+        this.pin = new pin_1.Pin(url);
     }
     async add(params) {
         try {
@@ -28,127 +32,4 @@ class IpfsKuboRpcHttpClient {
     }
 }
 exports.IpfsKuboRpcHttpClient = IpfsKuboRpcHttpClient;
-class Files {
-    constructor(url) {
-        this.url = url;
-    }
-    async write(params) {
-        params.create = params.create || true;
-        params.parents = params.parents || true;
-        const form = new form_data_1.default();
-        form.append("file", params.content);
-        try {
-            await axios_1.default.post(`${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`, form);
-            return true;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-    /**
-     * List all entries (files and directories) for path
-     * @param params
-     * @returns
-     */
-    async ls(params) {
-        try {
-            const res = await axios_1.default.post(`${this.url}/files/ls?long=1${params.path ? "&arg=" + params.path : ""}`);
-            return res.data.Entries;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-    /**
-     * Get properties of a object in given path
-     * @param params
-     * @returns
-     */
-    async stat(params) {
-        try {
-            const objectStat = (await axios_1.default.post(`${this.url}/files/stat?arg=${params.path}`)).data;
-            console.info(objectStat);
-            return objectStat;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-}
-exports.Files = Files;
-class Key {
-    constructor(url) {
-        this.url = url;
-    }
-    async gen(params) {
-        let urlParameters = "";
-        urlParameters += params.type ? `&type=${params.type}` : "";
-        urlParameters += params.size ? `&size=${params.size}` : "";
-        try {
-            const res = await axios_1.default.post(`${this.url}/key/gen?arg=${params.name}${urlParameters}`);
-            console.info(res);
-            return res.data;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-}
-exports.Key = Key;
-class Name {
-    constructor(url) {
-        this.url = url;
-    }
-    async publish(params) {
-        let urlParameters = ``;
-        urlParameters += params.key ? `&key=${params.key}` : "&key=self";
-        urlParameters += params.resolve ? `&resolve=true` : "&resolve=false";
-        urlParameters += params.ttl ? `&ttl=${params.ttl}` : "";
-        try {
-            const res = await axios_1.default.post(`${this.url}/name/publish?arg=${params.cid}${urlParameters}`);
-            console.info(res);
-            return res.data;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-}
-exports.Name = Name;
-class Pin {
-    constructor(url) {
-        this.url = url;
-    }
-    async add(params) {
-        try {
-            const res = await axios_1.default.post(`${this.url}/pin/add`, {}, { params: { arg: params.cids }, paramsSerializer: { indexes: null } });
-            console.info(res);
-            return true;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-    async ls(params) {
-        try {
-            const res = await axios_1.default.post(`${this.url}/pin/ls${params.cid ? "?arg=" + params.cid : ""}`);
-            console.info(res);
-            return res.data.Keys;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-    async rm(params) {
-        try {
-            const res = await axios_1.default.post(`${this.url}/pin/rm`, {}, { params: { arg: params.cids }, paramsSerializer: { indexes: null } });
-            console.info(res);
-            return true;
-        }
-        catch (err) {
-            throw new client_error_1.ClientError(err);
-        }
-    }
-}
-exports.Pin = Pin;
 //# sourceMappingURL=ipfs-http-client.js.map

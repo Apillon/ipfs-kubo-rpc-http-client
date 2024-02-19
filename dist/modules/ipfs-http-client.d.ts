@@ -1,4 +1,8 @@
-import { IAddResult, IEntry, IKeyGenResult, INamePublishResult, IStat } from "../types/types";
+import { IAddResult } from "../types/types";
+import { Files } from "./files";
+import { Key } from "./key";
+import { Name } from "./name";
+import { Pin } from "./pin";
 export declare class IpfsKuboRpcHttpClient {
     private url;
     files: Files;
@@ -9,69 +13,5 @@ export declare class IpfsKuboRpcHttpClient {
     add(params: {
         content: any;
     }): Promise<IAddResult>;
-}
-export declare class Files {
-    private url;
-    constructor(url: string);
-    write(params: {
-        content: any;
-        path: string;
-        create?: boolean;
-        parents?: boolean;
-    }): Promise<boolean>;
-    /**
-     * List all entries (files and directories) for path
-     * @param params
-     * @returns
-     */
-    ls(params: {
-        path?: string;
-    }): Promise<IEntry[]>;
-    /**
-     * Get properties of a object in given path
-     * @param params
-     * @returns
-     */
-    stat(params: {
-        path: string;
-    }): Promise<IStat>;
-}
-export declare class Key {
-    private url;
-    constructor(url: string);
-    gen(params: {
-        name: string;
-        type?: string;
-        size?: number;
-    }): Promise<IKeyGenResult>;
-}
-export declare class Name {
-    private url;
-    constructor(url: string);
-    publish(params: {
-        cid: string;
-        key: string;
-        resolve: boolean;
-        ttl?: string;
-    }): Promise<INamePublishResult>;
-}
-export declare class Pin {
-    private url;
-    constructor(url: string);
-    add(params: {
-        /**
-         * Path to object(s) to be pinned
-         */
-        cids: string[];
-    }): Promise<boolean>;
-    ls(params: {
-        cid?: string;
-    }): Promise<any>;
-    rm(params: {
-        /**
-         * Path to object(s) to be unpinned
-         */
-        cids: string[];
-    }): Promise<boolean>;
 }
 //# sourceMappingURL=ipfs-http-client.d.ts.map

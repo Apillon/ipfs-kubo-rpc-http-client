@@ -15,6 +15,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./modules/ipfs-http-client"), exports);
+__exportStar(require("./modules/files"), exports);
+__exportStar(require("./modules/key"), exports);
+__exportStar(require("./modules/name"), exports);
+__exportStar(require("./modules/pin"), exports);
 __exportStar(require("./types/client-error"), exports);
 __exportStar(require("./types/types"), exports);
 //# sourceMappingURL=index.js.map
