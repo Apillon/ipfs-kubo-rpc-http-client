@@ -7,9 +7,14 @@ export declare class Pin {
          */
         cids: string[];
     }): Promise<boolean>;
+    /**
+     * List pinned paths.
+     * @param params
+     * @returns Array of keys
+     */
     ls(params: {
         cid?: string;
-    }): Promise<any>;
+    }): Promise<string[]>;
     rm(params: {
         /**
          * Path to object(s) to be unpinned

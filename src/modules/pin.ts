@@ -26,13 +26,18 @@ export class Pin {
     }
   }
 
-  public async ls(params: { cid?: string }): Promise<any> {
+  /**
+   * List pinned paths.
+   * @param params
+   * @returns Array of keys
+   */
+  public async ls(params: { cid?: string }): Promise<string[]> {
     try {
       const res = await axios.post(
         `${this.url}/pin/ls${params.cid ? "?arg=" + params.cid : ""}`
       );
       console.info(res);
-      return res.data.Keys;
+      return Object.keys(res.data.Keys);
     } catch (err) {
       throw new ClientError(err);
     }

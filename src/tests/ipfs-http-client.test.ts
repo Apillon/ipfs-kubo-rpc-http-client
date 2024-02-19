@@ -38,7 +38,7 @@ describe("Ipfs http client integration test", () => {
       expect(res.Type).toBeTruthy();
     });
   });
-  describe.only("Key & IPNS Name tests", () => {
+  describe("Key & IPNS Name tests", () => {
     const key = "test key " + new Date().toString();
 
     test("Test generate new key", async () => {
@@ -78,7 +78,10 @@ describe("Ipfs http client integration test", () => {
       });
       expect(res).toBeTruthy();
       expect(
-        res["bafkreiakrvel4n4dd3jirros2dbow7jvtrdtfq2pbj6i7g6qpf64krmqfe"]
+        res.find(
+          (x) =>
+            x == "bafkreiakrvel4n4dd3jirros2dbow7jvtrdtfq2pbj6i7g6qpf64krmqfe"
+        )
       ).toBeTruthy();
     });
 

@@ -20,11 +20,16 @@ class Pin {
             throw new client_error_1.ClientError(err);
         }
     }
+    /**
+     * List pinned paths.
+     * @param params
+     * @returns Array of keys
+     */
     async ls(params) {
         try {
             const res = await axios_1.default.post(`${this.url}/pin/ls${params.cid ? "?arg=" + params.cid : ""}`);
             console.info(res);
-            return res.data.Keys;
+            return Object.keys(res.data.Keys);
         }
         catch (err) {
             throw new client_error_1.ClientError(err);

@@ -36,7 +36,7 @@ describe("Ipfs http client integration test", () => {
             expect(res.Type).toBeTruthy();
         });
     });
-    describe.only("Key & IPNS Name tests", () => {
+    describe("Key & IPNS Name tests", () => {
         const key = "test key " + new Date().toString();
         test("Test generate new key", async () => {
             const res = await client.key.gen({
@@ -69,7 +69,7 @@ describe("Ipfs http client integration test", () => {
                 cid: "bafkreiakrvel4n4dd3jirros2dbow7jvtrdtfq2pbj6i7g6qpf64krmqfe",
             });
             expect(res).toBeTruthy();
-            expect(res["bafkreiakrvel4n4dd3jirros2dbow7jvtrdtfq2pbj6i7g6qpf64krmqfe"]).toBeTruthy();
+            expect(res.find((x) => x == "bafkreiakrvel4n4dd3jirros2dbow7jvtrdtfq2pbj6i7g6qpf64krmqfe")).toBeTruthy();
         });
         test("Test remove pins", async () => {
             const res = await client.pin.rm({
