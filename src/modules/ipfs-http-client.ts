@@ -23,10 +23,17 @@ export class IpfsKuboRpcHttpClient {
     this.pin = new Pin(url);
   }
 
-  public async add(params: { content: any }): Promise<IAddResult> {
+  public async add(params: {
+    content: any;
+    fileName?: string;
+    contentType?: string;
+  }): Promise<IAddResult> {
     try {
       const form = new FormData();
-      form.append("file", params.content);
+      form.append("file", params.content, {
+        filename: params.fileName,
+        contentType: params.contentType,
+      });
 
       const res = await axios.post(`${this.url}/add?cid-version=1`, form);
 

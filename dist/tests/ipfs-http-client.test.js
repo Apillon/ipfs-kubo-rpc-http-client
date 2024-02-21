@@ -11,6 +11,15 @@ describe("Ipfs http client integration test", () => {
         expect(res.Hash).toBeTruthy();
         expect(res.Size).toBeGreaterThan(0);
     });
+    test("Test add with specified fileName and contentType", async () => {
+        const res = await client.add({
+            content: "Some test content on IPFS named Test.txt, of type text/plain",
+            fileName: "Test.txt",
+            contentType: "text/plain",
+        });
+        expect(res.Hash).toBeTruthy();
+        expect(res.Size).toBeGreaterThan(0);
+    });
     describe("Mutable file system tests", () => {
         const mfsFileName = `My_MFS_test_file_${new Date().toDateString()}.txt`;
         test("Test write MFS file", async () => {

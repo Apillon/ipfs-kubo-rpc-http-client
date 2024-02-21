@@ -15,7 +15,7 @@ class Files {
         params.create = params.create || true;
         params.parents = params.parents || true;
         const form = new form_data_1.default();
-        form.append("file", params.content);
+        form.append("file", params.content, {});
         try {
             await axios_1.default.post(`${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`, form);
             return true;

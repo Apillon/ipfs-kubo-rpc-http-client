@@ -12,6 +12,8 @@ export declare class IpfsKuboRpcHttpClient {
     constructor(url: string);
     add(params: {
         content: any;
+        fileName?: string;
+        contentType?: string;
     }): Promise<IAddResult>;
 }
 //# sourceMappingURL=ipfs-http-client.d.ts.map
