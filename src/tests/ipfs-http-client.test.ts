@@ -7,7 +7,19 @@ describe("Ipfs http client integration test", () => {
     const res = await client.add({
       content: "Some test content on IPFS",
     });
-    expect(res.Hash).toBeTruthy();
+    expect(res.Hash).toBe(
+      "bafkreigyq6zcb6ek7gm2gpcbexqjiy6yh62ajfgnunqi63crxskmidp4j4"
+    );
+    expect(res.Size).toBeGreaterThan(0);
+  });
+
+  test("Test add buffer", async () => {
+    const res = await client.add({
+      content: Buffer.from("Some test content on IPFS"),
+    });
+    expect(res.Hash).toBe(
+      "bafkreigyq6zcb6ek7gm2gpcbexqjiy6yh62ajfgnunqi63crxskmidp4j4"
+    );
     expect(res.Size).toBeGreaterThan(0);
   });
 
