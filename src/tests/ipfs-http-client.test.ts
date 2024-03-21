@@ -1,5 +1,6 @@
 import { IpfsKuboRpcHttpClient } from "../modules/ipfs-http-client";
 import "dotenv/config";
+import * as fs from "fs";
 
 describe("Ipfs http client integration test", () => {
   const client = new IpfsKuboRpcHttpClient(process.env.RPC_API_URL);
@@ -33,12 +34,38 @@ describe("Ipfs http client integration test", () => {
     expect(res.Size).toBeGreaterThan(0);
   });
 
+  test("Test add readable stream", async () => {
+    const fileStream = fs.createReadStream(
+      "./src/tests/test-files/test-file-1.png"
+    );
+
+    const res = await client.add({
+      content: fileStream,
+      fileName: "test-file-1.png",
+      contentType: "image/png",
+    });
+    expect(res.Hash).toBeTruthy();
+    expect(res.Size).toBeGreaterThan(0);
+  });
+
   describe("Mutable file system tests", () => {
     const mfsFileName = `My_MFS_test_file_${new Date().toDateString()}.txt`;
     test("Test write MFS file", async () => {
       const res = await client.files.write({
         content: "This is file in MFS written on " + new Date().toString(),
         path: `/ipfs-http-client-tests/${mfsFileName}`,
+      });
+      expect(res).toBeTruthy();
+    });
+
+    test("Test write stream to MFS file", async () => {
+      const fileStream = fs.createReadStream(
+        "./src/tests/test-files/test-file-1.png"
+      );
+
+      const res = await client.files.write({
+        content: fileStream,
+        path: `/ipfs-http-client-tests/image.png`,
       });
       expect(res).toBeTruthy();
     });

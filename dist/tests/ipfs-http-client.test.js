@@ -1,14 +1,45 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const ipfs_http_client_1 = require("../modules/ipfs-http-client");
 require("dotenv/config");
+const fs = __importStar(require("fs"));
 describe("Ipfs http client integration test", () => {
     const client = new ipfs_http_client_1.IpfsKuboRpcHttpClient(process.env.RPC_API_URL);
     test("Test add", async () => {
         const res = await client.add({
             content: "Some test content on IPFS",
         });
-        expect(res.Hash).toBeTruthy();
+        expect(res.Hash).toBe("bafkreigyq6zcb6ek7gm2gpcbexqjiy6yh62ajfgnunqi63crxskmidp4j4");
+        expect(res.Size).toBeGreaterThan(0);
+    });
+    test("Test add buffer", async () => {
+        const res = await client.add({
+            content: Buffer.from("Some test content on IPFS"),
+        });
+        expect(res.Hash).toBe("bafkreigyq6zcb6ek7gm2gpcbexqjiy6yh62ajfgnunqi63crxskmidp4j4");
         expect(res.Size).toBeGreaterThan(0);
     });
     test("Test add with specified fileName and contentType", async () => {
@@ -20,12 +51,30 @@ describe("Ipfs http client integration test", () => {
         expect(res.Hash).toBeTruthy();
         expect(res.Size).toBeGreaterThan(0);
     });
+    test("Test add readable stream", async () => {
+        const fileStream = fs.createReadStream("./src/tests/test-files/test-file-1.png");
+        const res = await client.add({
+            content: fileStream,
+            fileName: "test-file-1.png",
+            contentType: "image/png",
+        });
+        expect(res.Hash).toBeTruthy();
+        expect(res.Size).toBeGreaterThan(0);
+    });
     describe("Mutable file system tests", () => {
         const mfsFileName = `My_MFS_test_file_${new Date().toDateString()}.txt`;
         test("Test write MFS file", async () => {
             const res = await client.files.write({
                 content: "This is file in MFS written on " + new Date().toString(),
                 path: `/ipfs-http-client-tests/${mfsFileName}`,
+            });
+            expect(res).toBeTruthy();
+        });
+        test("Test write stream to MFS file", async () => {
+            const fileStream = fs.createReadStream("./src/tests/test-files/test-file-1.png");
+            const res = await client.files.write({
+                content: fileStream,
+                path: `/ipfs-http-client-tests/image.png`,
             });
             expect(res).toBeTruthy();
         });

@@ -1,7 +1,7 @@
 {
   "name": "@apillon/ipfs-kubo-rpc-http-client",
   "description": "▶◀ Apillon node.js library for IPFS Kubo RPC API v0  ▶◀",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Apillon",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -26,7 +26,8 @@
     "lint": "tsc --declarationMap && eslint \"{src,test}/**/*.ts\" --fix",
     "publish-package": "npm publish",
     "publish-beta": "npm publish --tag beta",
-    "test": "npx jest"
+    "test": "npx jest --runInBand",
+    "test:logging": "npx jest LOG_TARGET=console --runInBand"
   },
   "keywords": [
     "Apillon",
@@ -38,8 +39,9 @@
     "RPC API"
   ],
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.241.0",
     "axios": "^1.6.7",
-    "form-data": "^4.0.0"
+    "unirest": "^0.6.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",

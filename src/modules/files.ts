@@ -2,6 +2,8 @@ import axios from "axios";
 import FormData from "form-data";
 import { ClientError } from "../types/client-error";
 import { IEntry, IStat } from "../types/types";
+import * as stream from "stream";
+var unirest = require("unirest");
 
 export class Files {
   private url: string;
@@ -17,14 +19,31 @@ export class Files {
   }): Promise<boolean> {
     params.create = params.create || true;
     params.parents = params.parents || true;
-    const form = new FormData();
-    form.append("file", params.content);
 
     try {
-      await axios.post(
-        `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`,
-        form
-      );
+      if (params.content instanceof stream.Readable) {
+        await new Promise((resolve, reject) => {
+          unirest(
+            "POST",
+            `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`
+          )
+            .attach("file", params.content)
+            .end(function (res) {
+              if (res.error) {
+                reject(new Error(res.error));
+              }
+              resolve(true);
+            });
+        });
+      } else {
+        const form = new FormData();
+        form.append("file", params.content);
+        await axios.post(
+          `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`,
+          form
+        );
+      }
+
       return true;
     } catch (err) {
       throw new ClientError(err);
