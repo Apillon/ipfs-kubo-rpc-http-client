@@ -1,13 +1,10 @@
+import FormData from "form-data";
 import { ClientError } from "../types/client-error";
 import { IAddResult } from "../types/types";
 import { Files } from "./files";
 import { Key } from "./key";
 import { Name } from "./name";
 import { Pin } from "./pin";
-import axios from "axios";
-import FormData from "form-data";
-var unirest = require("unirest");
-import * as stream from "stream";
 
 export class IpfsKuboRpcHttpClient {
   private url: string;
@@ -31,34 +28,52 @@ export class IpfsKuboRpcHttpClient {
     contentType?: string;
   }): Promise<IAddResult> {
     try {
-      //Readable streams are uploaded with unirest library - can handle upload without loading stream into memory
-      if (params.content instanceof stream.Readable) {
-        const res: any = await new Promise((resolve, reject) => {
-          unirest("POST", `${this.url}/add?cid-version=1`)
-            .attach("file", params.content)
-            .end(function (res) {
-              if (res.error) {
-                reject(new Error(res.error));
-              }
-              console.log(res.raw_body);
-              resolve(JSON.parse(res.raw_body));
-            });
-        });
+      const form = new FormData();
+      form.append("file", params.content, {
+        filename: params.fileName,
+        contentType: params.contentType,
+      });
 
+      const url = new URL(`${this.url}/add?cid-version=1`);
+      let receivedMessage = "";
+      await new Promise((resolve, reject) => {
+        form.submit(
+          {
+            host: url.hostname,
+            port: url.port,
+            path: url.pathname + url.search,
+          },
+          (err, res) => {
+            if (err) {
+              throw new ClientError(err);
+            }
+
+            res.on("data", (data) => {
+              receivedMessage += data.toString();
+            });
+
+            res.on("end", () => {
+              resolve(true);
+            });
+
+            res.on("error", (data) => {
+              reject(data);
+            });
+          }
+        );
+      });
+
+      if (receivedMessage.includes("Hash")) {
+        const ipfsRes = receivedMessage.substring(
+          receivedMessage.indexOf("{"),
+          receivedMessage.indexOf("}") + 1
+        );
+
+        const res = JSON.parse(ipfsRes);
         res.Size = +res.Size;
         return res;
-      } else {
-        const form = new FormData();
-        form.append("file", params.content, {
-          filename: params.fileName,
-          contentType: params.contentType,
-        });
-
-        const res = await axios.post(`${this.url}/add?cid-version=1`, form);
-
-        res.data.Size = +res.data.Size;
-        return res.data;
       }
+      throw new ClientError(new Error(receivedMessage));
     } catch (err) {
       throw new ClientError(err);
     }

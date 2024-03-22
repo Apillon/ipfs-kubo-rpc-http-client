@@ -2,8 +2,6 @@ import axios from "axios";
 import FormData from "form-data";
 import { ClientError } from "../types/client-error";
 import { IEntry, IStat } from "../types/types";
-import * as stream from "stream";
-var unirest = require("unirest");
 
 export class Files {
   private url: string;
@@ -21,27 +19,43 @@ export class Files {
     params.parents = params.parents || true;
 
     try {
-      if (params.content instanceof stream.Readable) {
-        await new Promise((resolve, reject) => {
-          unirest(
-            "POST",
-            `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`
-          )
-            .attach("file", params.content)
-            .end(function (res) {
-              if (res.error) {
-                reject(new Error(res.error));
-              }
+      const form = new FormData();
+      form.append("file", params.content);
+
+      let receivedMessage = "";
+      const url = new URL(
+        `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`
+      );
+
+      await new Promise((resolve, reject) => {
+        form.submit(
+          {
+            host: url.hostname,
+            port: url.port,
+            path: url.pathname + url.search,
+          },
+          (err, res) => {
+            if (err) {
+              throw err;
+            }
+
+            res.on("data", (data) => {
+              receivedMessage += data.toString();
+            });
+
+            res.on("end", () => {
               resolve(true);
             });
-        });
-      } else {
-        const form = new FormData();
-        form.append("file", params.content);
-        await axios.post(
-          `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`,
-          form
+
+            res.on("error", (data) => {
+              reject(data);
+            });
+          }
         );
+      });
+
+      if (receivedMessage) {
+        throw new Error(receivedMessage);
       }
 
       return true;
