@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -30,8 +7,6 @@ exports.Files = void 0;
 const axios_1 = __importDefault(require("axios"));
 const form_data_1 = __importDefault(require("form-data"));
 const client_error_1 = require("../types/client-error");
-const stream = __importStar(require("stream"));
-var unirest = require("unirest");
 class Files {
     constructor(url) {
         this.url = url;
@@ -40,22 +15,32 @@ class Files {
         params.create = params.create || true;
         params.parents = params.parents || true;
         try {
-            if (params.content instanceof stream.Readable) {
-                await new Promise((resolve, reject) => {
-                    unirest("POST", `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`)
-                        .attach("file", params.content)
-                        .end(function (res) {
-                        if (res.error) {
-                            reject(new Error(res.error));
-                        }
+            const form = new form_data_1.default();
+            form.append("file", params.content);
+            let receivedMessage = "";
+            const url = new URL(`${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`);
+            await new Promise((resolve, reject) => {
+                form.submit({
+                    host: url.hostname,
+                    port: url.port,
+                    path: url.pathname + url.search,
+                }, (err, res) => {
+                    if (err) {
+                        throw err;
+                    }
+                    res.on("data", (data) => {
+                        receivedMessage += data.toString();
+                    });
+                    res.on("end", () => {
                         resolve(true);
                     });
+                    res.on("error", (data) => {
+                        reject(data);
+                    });
                 });
-            }
-            else {
-                const form = new form_data_1.default();
-                form.append("file", params.content);
-                await axios_1.default.post(`${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`, form);
+            });
+            if (receivedMessage) {
+                throw new Error(receivedMessage);
             }
             return true;
         }
