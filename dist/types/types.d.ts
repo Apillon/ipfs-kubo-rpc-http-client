@@ -1,3 +1,10 @@
+export interface IVersion {
+    Commit: string;
+    Golang: string;
+    Repo: string;
+    System: string;
+    Version: string;
+}
 export interface IAddResult {
     Hash: string;
     Size: number;

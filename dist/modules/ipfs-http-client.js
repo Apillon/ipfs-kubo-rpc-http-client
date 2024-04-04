@@ -10,6 +10,7 @@ const files_1 = require("./files");
 const key_1 = require("./key");
 const name_1 = require("./name");
 const pin_1 = require("./pin");
+const axios_1 = __importDefault(require("axios"));
 class IpfsKuboRpcHttpClient {
     constructor(url) {
         this.url = url;
@@ -54,6 +55,20 @@ class IpfsKuboRpcHttpClient {
                 return res;
             }
             throw new client_error_1.ClientError(new Error(receivedMessage));
+        }
+        catch (err) {
+            throw new client_error_1.ClientError(err);
+        }
+    }
+    /**
+     * Get IPFS version data
+     * @param timeout defaults to 0, which means no timeout
+     * @returns
+     */
+    async version(timeout = 0) {
+        try {
+            const res = await axios_1.default.post(`${this.url}/version`, {}, { timeout });
+            return res.data;
         }
         catch (err) {
             throw new client_error_1.ClientError(err);

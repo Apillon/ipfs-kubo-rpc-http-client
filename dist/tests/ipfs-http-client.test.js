@@ -61,6 +61,14 @@ describe("Ipfs http client integration test", () => {
         expect(res.Hash).toBeTruthy();
         expect(res.Size).toBeGreaterThan(0);
     });
+    test.only("Test get ipfs version", async () => {
+        const res = await client.version();
+        expect(res.Version).toBeTruthy();
+        expect(res.Commit).toBeTruthy();
+        expect(res.Golang).toBeTruthy();
+        expect(res.Repo).toBeTruthy();
+        expect(res.System).toBeTruthy();
+    });
     describe("Mutable file system tests", () => {
         const mfsFileName = `My_MFS_test_file_${new Date().toDateString()}.txt`;
         test("Test write MFS file", async () => {

@@ -1,10 +1,11 @@
 import FormData from "form-data";
 import { ClientError } from "../types/client-error";
-import { IAddResult } from "../types/types";
+import { IAddResult, IVersion } from "../types/types";
 import { Files } from "./files";
 import { Key } from "./key";
 import { Name } from "./name";
 import { Pin } from "./pin";
+import axios from "axios";
 
 export class IpfsKuboRpcHttpClient {
   private url: string;
@@ -22,6 +23,12 @@ export class IpfsKuboRpcHttpClient {
     this.pin = new Pin(url);
   }
 
+  /**
+   * Add content to ipfs
+   * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+   * @param params
+   * @returns Hash and size of uploaded content
+   */
   public async add(params: {
     content: any;
     fileName?: string;
@@ -74,6 +81,21 @@ export class IpfsKuboRpcHttpClient {
         return res;
       }
       throw new ClientError(new Error(receivedMessage));
+    } catch (err) {
+      throw new ClientError(err);
+    }
+  }
+
+  /**
+   * Get IPFS version data
+   * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-version
+   * @param timeout defaults to 0, which means no timeout
+   * @returns
+   */
+  public async version(timeout = 0): Promise<IVersion> {
+    try {
+      const res = await axios.post(`${this.url}/version`, {}, { timeout });
+      return res.data;
     } catch (err) {
       throw new ClientError(err);
     }
