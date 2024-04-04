@@ -14,11 +14,20 @@ const axios_1 = __importDefault(require("axios"));
 class IpfsKuboRpcHttpClient {
     constructor(url) {
         this.url = url;
+        if (this.url.endsWith("/")) {
+            this.url = this.url.slice(0, -1);
+        }
         this.files = new files_1.Files(url);
         this.key = new key_1.Key(url);
         this.name = new name_1.Name(url);
         this.pin = new pin_1.Pin(url);
     }
+    /**
+     * Add content to ipfs
+     * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+     * @param params
+     * @returns Hash and size of uploaded content
+     */
     async add(params) {
         try {
             const form = new form_data_1.default();
@@ -62,6 +71,7 @@ class IpfsKuboRpcHttpClient {
     }
     /**
      * Get IPFS version data
+     * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-version
      * @param timeout defaults to 0, which means no timeout
      * @returns
      */

@@ -10,6 +10,12 @@ export declare class IpfsKuboRpcHttpClient {
     name: Name;
     pin: Pin;
     constructor(url: string);
+    /**
+     * Add content to ipfs
+     * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+     * @param params
+     * @returns Hash and size of uploaded content
+     */
     add(params: {
         content: any;
         fileName?: string;
@@ -17,6 +23,7 @@ export declare class IpfsKuboRpcHttpClient {
     }): Promise<IAddResult>;
     /**
      * Get IPFS version data
+     * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-version
      * @param timeout defaults to 0, which means no timeout
      * @returns
      */

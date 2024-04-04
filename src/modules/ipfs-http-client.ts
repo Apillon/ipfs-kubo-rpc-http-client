@@ -17,6 +17,9 @@ export class IpfsKuboRpcHttpClient {
 
   constructor(url: string) {
     this.url = url;
+    if (this.url.endsWith("/")) {
+      this.url = this.url.slice(0, -1);
+    }
     this.files = new Files(url);
     this.key = new Key(url);
     this.name = new Name(url);
