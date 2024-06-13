@@ -13,11 +13,13 @@ export class Name {
     key: string;
     resolve: boolean;
     ttl?: string;
+    lifetime?: string;
   }): Promise<INamePublishResult> {
     let urlParameters = ``;
     urlParameters += params.key ? `&key=${params.key}` : "&key=self";
     urlParameters += params.resolve ? `&resolve=true` : "&resolve=false";
     urlParameters += params.ttl ? `&ttl=${params.ttl}` : "";
+    urlParameters += params.lifetime ? `&ttl=${params.lifetime}` : "";
 
     try {
       const res = await axios.post(

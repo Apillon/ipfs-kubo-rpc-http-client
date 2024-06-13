@@ -124,6 +124,17 @@ describe("Ipfs http client integration test", () => {
             expect(res.Name).toBeTruthy();
             expect(res.Value).toContain("bafkreiakrvel4n4dd3jirros2dbow7jvtrdtfq2pbj6i7g6qpf64krmqfe");
         });
+        test("Test publish name without resolving cid", async () => {
+            const res = await client.name.publish({
+                cid: "bafkreiakrvel4n4dd3jirros2dbow7jvtrdtfq2pbj6i7g6qpf64krmqfe",
+                key,
+                resolve: false,
+                lifetime: "8760h",
+            });
+            expect(res).toBeTruthy();
+            expect(res.Name).toBeTruthy();
+            console.info(res.Name);
+        });
     });
     describe("Pin tests", () => {
         test("Test add new pins", async () => {

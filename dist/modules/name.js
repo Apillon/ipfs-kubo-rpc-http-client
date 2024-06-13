@@ -15,6 +15,7 @@ class Name {
         urlParameters += params.key ? `&key=${params.key}` : "&key=self";
         urlParameters += params.resolve ? `&resolve=true` : "&resolve=false";
         urlParameters += params.ttl ? `&ttl=${params.ttl}` : "";
+        urlParameters += params.lifetime ? `&ttl=${params.lifetime}` : "";
         try {
             const res = await axios_1.default.post(`${this.url}/name/publish?arg=${params.cid}${urlParameters}`);
             console.info(res);

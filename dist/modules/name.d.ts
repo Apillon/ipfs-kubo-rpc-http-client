@@ -7,6 +7,7 @@ export declare class Name {
         key: string;
         resolve: boolean;
         ttl?: string;
+        lifetime?: string;
     }): Promise<INamePublishResult>;
 }
 //# sourceMappingURL=name.d.ts.map

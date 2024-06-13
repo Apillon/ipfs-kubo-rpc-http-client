@@ -20,6 +20,7 @@ export declare class IpfsKuboRpcHttpClient {
         content: any;
         fileName?: string;
         contentType?: string;
+        pin?: boolean;
     }): Promise<IAddResult>;
     /**
      * Get IPFS version data
