@@ -85,6 +85,22 @@ class IpfsKuboRpcHttpClient {
             throw new client_error_1.ClientError(err);
         }
     }
+    /**
+     * Convert CIDs to Base32 CID version 1
+     * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-base32
+     * @param cid cid to convert
+     * @returns string cidV1
+     */
+    async cidToCidV1(cid) {
+        var _a;
+        try {
+            const res = await axios_1.default.post(`${this.url}/cid/base32?arg=${cid}`, {}, {});
+            return (_a = res.data) === null || _a === void 0 ? void 0 : _a.Formatted;
+        }
+        catch (err) {
+            throw new client_error_1.ClientError(err);
+        }
+    }
 }
 exports.IpfsKuboRpcHttpClient = IpfsKuboRpcHttpClient;
 //# sourceMappingURL=ipfs-http-client.js.map

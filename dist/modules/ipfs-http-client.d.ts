@@ -29,5 +29,12 @@ export declare class IpfsKuboRpcHttpClient {
      * @returns
      */
     version(timeout?: number): Promise<IVersion>;
+    /**
+     * Convert CIDs to Base32 CID version 1
+     * https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-base32
+     * @param cid cid to convert
+     * @returns string cidV1
+     */
+    cidToCidV1(cid: string): Promise<string>;
 }
 //# sourceMappingURL=ipfs-http-client.d.ts.map

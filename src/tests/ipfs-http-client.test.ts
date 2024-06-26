@@ -48,13 +48,22 @@ describe("Ipfs http client integration test", () => {
     expect(res.Size).toBeGreaterThan(0);
   });
 
-  test.only("Test get ipfs version", async () => {
+  test("Test get ipfs version", async () => {
     const res = await client.version();
     expect(res.Version).toBeTruthy();
     expect(res.Commit).toBeTruthy();
     expect(res.Golang).toBeTruthy();
     expect(res.Repo).toBeTruthy();
     expect(res.System).toBeTruthy();
+  });
+
+  test("Test convert cid to cid version 1", async () => {
+    const res = await client.cidToCidV1(
+      "QmU1rFb7CJoGKa32nkv2bD4WHAU8zf9ixtKmtD2ZBoXAAc"
+    );
+    expect(res).toBe(
+      "bafybeicukurt4myiamzegtqmjtd4fozdgby5xitc7lpnyagz553vgviwye"
+    );
   });
 
   describe("Mutable file system tests", () => {
