@@ -45,8 +45,6 @@ export class IpfsKuboRpcHttpClient {
         contentType: params.contentType,
       });
 
-      params.pin = params.pin || true;
-
       const url = new URL(
         `${this.url}/add?cid-version=1&pin=${params.pin ? "true" : "false"}`
       );
