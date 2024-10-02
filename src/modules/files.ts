@@ -14,6 +14,7 @@ export class Files {
     path: string;
     create?: boolean;
     parents?: boolean;
+    rawLeaves?: boolean;
   }): Promise<boolean> {
     params.create = params.create || true;
     params.parents = params.parents || true;
@@ -24,7 +25,11 @@ export class Files {
 
       let receivedMessage = "";
       const url = new URL(
-        `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}`
+        `${this.url}/files/write?arg=${params.path}&cid-version=1&create=${
+          params.create
+        }&parents=${params.parents}${
+          params.rawLeaves == false ? "&raw-leaves=false" : ""
+        }`
       );
 
       await new Promise((resolve, reject) => {

@@ -29,13 +29,15 @@ class IpfsKuboRpcHttpClient {
      * @returns Hash and size of uploaded content
      */
     async add(params) {
+        var _a;
         try {
             const form = new form_data_1.default();
             form.append("file", params.content, {
                 filename: params.fileName,
                 contentType: params.contentType,
             });
-            const url = new URL(`${this.url}/add?cid-version=1&pin=${params.pin ? "true" : "false"}`);
+            params.pin = (_a = params.pin) !== null && _a !== void 0 ? _a : true;
+            const url = new URL(`${this.url}/add?cid-version=1&pin=${params.pin ? "true" : "false"}${params.rawLeaves == false ? "&raw-leaves=false" : ""}`);
             let receivedMessage = "";
             await new Promise((resolve, reject) => {
                 form.submit({

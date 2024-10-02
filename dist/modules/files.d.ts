@@ -7,6 +7,7 @@ export declare class Files {
         path: string;
         create?: boolean;
         parents?: boolean;
+        rawLeaves?: boolean;
     }): Promise<boolean>;
     /**
      * List all entries (files and directories) for path

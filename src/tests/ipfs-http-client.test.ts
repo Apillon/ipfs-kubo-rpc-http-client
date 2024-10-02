@@ -4,10 +4,11 @@ import * as fs from "fs";
 
 describe("Ipfs http client integration test", () => {
   const client = new IpfsKuboRpcHttpClient(process.env.RPC_API_URL);
-  test.only("Test add", async () => {
+  test("Test add", async () => {
     const res = await client.add({
       content: "Some test content on IPFS",
       pin: true,
+      rawLeaves: true,
     });
     expect(res.Hash).toBe(
       "bafkreigyq6zcb6ek7gm2gpcbexqjiy6yh62ajfgnunqi63crxskmidp4j4"
