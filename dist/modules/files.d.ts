@@ -2,12 +2,19 @@ import { IEntry, IStat } from "../types/types";
 export declare class Files {
     private url;
     constructor(url: string);
+    /**
+      Write to a file in MFS.
+     */
     write(params: {
         content: any;
         path: string;
         create?: boolean;
         parents?: boolean;
         rawLeaves?: boolean;
+        /**
+         * If true, it will truncate the file before writing to it.
+         */
+        truncate?: boolean;
     }): Promise<boolean>;
     /**
      * List all entries (files and directories) for path

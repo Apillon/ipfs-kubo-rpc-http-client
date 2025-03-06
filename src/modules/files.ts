@@ -9,12 +9,19 @@ export class Files {
     this.url = url;
   }
 
+  /**
+    Write to a file in MFS.
+   */
   public async write(params: {
     content: any;
     path: string;
     create?: boolean;
     parents?: boolean;
     rawLeaves?: boolean;
+    /**
+     * If true, it will truncate the file before writing to it.
+     */
+    truncate?: boolean;
   }): Promise<boolean> {
     params.create = params.create || true;
     params.parents = params.parents || true;
@@ -29,7 +36,7 @@ export class Files {
           params.create
         }&parents=${params.parents}${
           params.rawLeaves == false ? "&raw-leaves=false" : ""
-        }`
+        }${params.truncate == true ? "&truncate=true" : ""}`
       );
 
       await new Promise((resolve, reject) => {

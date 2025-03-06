@@ -11,6 +11,9 @@ class Files {
     constructor(url) {
         this.url = url;
     }
+    /**
+      Write to a file in MFS.
+     */
     async write(params) {
         params.create = params.create || true;
         params.parents = params.parents || true;
@@ -18,7 +21,7 @@ class Files {
             const form = new form_data_1.default();
             form.append("file", params.content);
             let receivedMessage = "";
-            const url = new URL(`${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}${params.rawLeaves == false ? "&raw-leaves=false" : ""}`);
+            const url = new URL(`${this.url}/files/write?arg=${params.path}&cid-version=1&create=${params.create}&parents=${params.parents}${params.rawLeaves == false ? "&raw-leaves=false" : ""}${params.truncate == true ? "&truncate=true" : ""}`);
             await new Promise((resolve, reject) => {
                 form.submit({
                     host: url.hostname,
