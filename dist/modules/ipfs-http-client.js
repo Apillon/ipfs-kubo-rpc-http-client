@@ -60,7 +60,7 @@ class IpfsKuboRpcHttpClient {
                 });
             });
             if (receivedMessage.includes("Hash")) {
-                const ipfsRes = receivedMessage.substring(receivedMessage.indexOf("{"), receivedMessage.indexOf("}") + 1);
+                const ipfsRes = receivedMessage.substring(receivedMessage.indexOf("{"), receivedMessage.lastIndexOf("}") + 1);
                 const res = JSON.parse(ipfsRes);
                 res.Size = +res.Size;
                 return res;
